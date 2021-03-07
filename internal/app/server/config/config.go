@@ -10,11 +10,11 @@ import (
 
 type (
 	Config struct {
-		Host           string `envconfig:"RUDDER_HOST"`
-		Port           int    `envconfig:"RUDDER_PORT"`
-		Mode           string `envconfig:"RUDDER_MODE"`
-		DatabaseSource string `envconfig:"RUDDER_DATABASE_SOURCE"`
-		DatabaseSecret string `envconfig:"DRONE_DATABASE_SECRET"`
+		Host           string `envconfig:"HTTP_HOST"`
+		Port           int    `envconfig:"HTTP_PORT"`
+		Mode           string `envconfig:"LOG_MODE"`
+		DatabaseSource string `envconfig:"DATABASE_SOURCE"`
+		DatabaseSecret string `envconfig:"DATABASE_SECRET"`
 	}
 )
 
@@ -28,6 +28,12 @@ func (c Config) String() string {
 func environ() (Config, error) {
 	cfg := Config{}
 	err := envconfig.Process("", &cfg)
+	if cfg.Host == "" {
+		cfg.Host = "0.0.0.0"
+	}
+	if cfg.Port == 0 {
+		cfg.Port = 8080
+	}
 	return cfg, err
 }
 

@@ -37,6 +37,7 @@ func (app application) startHttpServer(ctx context.Context) {
 	}
 
 	// 新开启goroutine,运行http server
+	logrus.Info(fmt.Sprintf("http server start at %s", addr))
 	go func() {
 		err := srv.ListenAndServe()
 		if err != nil {
@@ -44,10 +45,11 @@ func (app application) startHttpServer(ctx context.Context) {
 			cancel()
 		}
 	}()
-	logrus.Info("http server started")
+
 	// 新开启goroutine,监听context状态
 	select {
 	case <-ctx.Done():
+		_ = srv.Shutdown(ctx)
 		logrus.Info("stop application ...")
 	}
 }

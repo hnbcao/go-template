@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"go-web-template/internal/app/server/config"
 	"net/http"
 )
@@ -26,6 +27,13 @@ func CreateHTTPAPIHandler(cfg config.Config) *handler {
 	hd := &handler{
 		engine: gin.Default(),
 	}
+	hd.engine.Use(middleware())
 	hd.install("/api")
 	return hd
+}
+
+func middleware() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		logrus.Info("middleware")
+	}
 }
